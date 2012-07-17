@@ -43,7 +43,7 @@ def main():
     #get_bugs()
     projects = get_projects()
     for p in projects:
-        print(p)
+        print("{0}: {1} members".format(p, len(p.members)))
 
 
 if __name__ == '__main__':

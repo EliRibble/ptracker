@@ -23,7 +23,35 @@ class Project():
     def __init__(self, xml):
         for f in Project.FIELDS:
             setattr(self, f, xml.find(f).text)
+
+        self._parse_members(xml.find('memberships'))
         
     def __str__(self):
         return "Project {0}-{1}".format(self.id, self.name)
+
+    def _parse_members(self, xml):
+        self.members = []
+        for membership in xml.findall('membership'):
+            self.members.append(Member(membership))
+        
+
+class Member():
+    FIELDS = [
+        'id',
+        'role'
+    ]
+
+    PERSON_FIELDS = [
+        'email',
+        'name',
+        'initials'
+    ]
+
+    def __init__(self, xml):
+        for f in Member.FIELDS:
+            setattr(self, f, xml.find(f).text)
+ 
+        person = xml.find('person')
+        for f in Member.PERSON_FIELDS:
+            setattr(self, f, person.find(f).text)
         
