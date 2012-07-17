@@ -1,6 +1,5 @@
 import settings
 import pivotal
-import urllib
 
 class PivotalObject(object):
     def __init__(self, xml):
@@ -50,21 +49,9 @@ class Project(PivotalObject):
         
     def bugs(self):
         if not self._bugs:
-            self._bugs = self._get_bugs()
+            self._bugs = pivotal.get_bugs(self.id)
         return self._bugs
 
-    def _get_bugs(self):
-        BUGS_URL = 'https://www.pivotaltracker.com/services/v3/projects/{0}/stories?{1}'
-        formatted_url = BUGS_URL.format(self.id, urllib.urlencode({"filter": "type:bug"}))
-        req = pivotal.get_url(formatted_url, settings.guid)
-        return self._parse_stories(req)
-        
-    def _parse_stories(self, data):
-        stories = []
-        for bug in data.findall('story'):
-            stories.append(Story(bug))   
-        return stories
-        
             
 
 class Member(PivotalObject):
@@ -104,3 +91,11 @@ class Story(PivotalObject):
     
     def __init__(self, xml):
         super(Story, self).__init__(xml)
+
+    @staticmethod
+    def parse(xml):
+        stories = []
+        for bug in xml.findall('story'):
+            stories.append(Story(bug))   
+        return stories
+        
