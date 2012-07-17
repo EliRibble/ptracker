@@ -56,7 +56,6 @@ class Project(PivotalObject):
     def _get_bugs(self):
         BUGS_URL = 'https://www.pivotaltracker.com/services/v3/projects/{0}/stories?{1}'
         formatted_url = BUGS_URL.format(self.id, urllib.urlencode({"filter": "type:bug"}))
-        print(formatted_url)
         req = pivotal.get_url(formatted_url, settings.guid)
         return self._parse_stories(req)
         
