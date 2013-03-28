@@ -1,0 +1,23 @@
+#!/usr/bin/env python
+import sys
+import argparse
+import ptracker.commands
+
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--guid', help="Your PivotalTracker GUID")
+    
+    subparsers = parser.add_subparsers()
+    projects_parser = subparsers.add_parser('projects', help="Get the list of projects")
+    projects_parser.set_defaults(command='projects')
+
+    args = parser.parse_args()
+
+    if args.command == 'projects':
+        return ptracker.commands.projects(args.guid)
+
+    return 0
+
+if __name__ == '__main__':
+    sys.exit(main())
+    
