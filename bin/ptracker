@@ -11,11 +11,25 @@ def main():
     projects_parser = subparsers.add_parser('projects', help="Get the list of projects")
     projects_parser.set_defaults(command='projects')
 
+    stories_parser = subparsers.add_parser('stories', help="Get information about the stories")
+    stories_parser.set_defaults(command='stories')
+    stories_parser.add_argument('--project-id', help="The project ID to get the stories from")
+
+    story_parser = subparsers.add_parser('story', help="Get information about a bug")
+    story_parser.set_defaults(command='story')
+    story_parser.add_argument('--project-id', help="The project ID to get the story from")
+    story_parser.add_argument('--story-id', help="The story ID of the story to get")
+
     args = parser.parse_args()
 
     if args.command == 'projects':
         return ptracker.commands.projects(args.guid)
 
+    elif args.command == 'stories':
+        return ptracker.commands.stories(args.guid, args.project_id)
+
+    elif args.command == 'story':
+        return ptracker.commands.story(args.guid, args.project_id, args.story_id)
     return 0
 
 if __name__ == '__main__':
