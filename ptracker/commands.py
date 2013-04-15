@@ -48,7 +48,7 @@ def story(guid, project_id, story_id):
     print("Owned by: {0}".format(story.owned_by))
     print("URL: {0}".format(story.url))
     print(story.description)
-    print("\n")
     for note in story.notes:
+        print("\n")
         print("{0} - {1}".format(note.author, note.noted_at))
         print('"{0}"'.format(note.text))
