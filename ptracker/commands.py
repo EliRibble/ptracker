@@ -7,10 +7,18 @@ PROJECTS_URL    = 'https://www.pivotaltracker.com/services/v3/projects'
 STORIES_URL     = 'https://www.pivotaltracker.com/services/v3/projects/{0}/stories'
 STORY_URL       = 'https://www.pivotaltracker.com/services/v3/projects/{0}/stories/{1}'
 
+def _get_data(guid, url_pattern, parameters):
+    url = url_pattern.format(*parameters)
+    data = requests.get(url, headers={'X-TrackerToken': guid})
+    if not data.status_code == 200:
+        print(data.status_code, data.content)
+        raise Exception(data.content)
+    return data.content
+    
 def projects(guid):
-    data = requests.get(PROJECTS_URL, headers={'X-TrackerToken': guid})
-    assert data.status_code == 200
-    xml = etree.parse(StringIO.StringIO(data.content))
+    xml = _get_data(guid, PROJECTS_URL, ())
+
+    xml = etree.parse(StringIO.StringIO(xml))
     
     #import pdb;pdb.set_trace()
     for project in xml.findall('project'):
@@ -28,12 +36,7 @@ def stories(guid, project_id):
     print(xml)
 
 def story(guid, project_id, story_id):
-    url = STORY_URL.format(project_id, story_id)
-    data = requests.get(url, headers={'X-TrackerToken': guid})
-    if not data.status_code == 200:
-        print(data.status_code, data.content)
-        return 1
-    story = parse(data.content)
+    story = parse(_get_data(guid, STORY_URL, (project_id, story_id)))
 
     print("{0} {1} - {2}".format(story.story_type, story.id, story.name))
     print("Labels: {0}".format(story.labels))
