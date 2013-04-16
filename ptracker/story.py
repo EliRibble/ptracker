@@ -57,7 +57,15 @@ def _parse_story(story):
     s.notes         = _parse_notes(story.find('notes'))
     return s
 
+def _parse_stories(stories):
+    stories = []
+    for story in stories:
+        stories.append(_parse_story(story))
+    return stories
+    
 def parse(xml):
     xml = etree.parse(StringIO.StringIO(xml))
+    if xml.getroot().tag == 'stories':
+        return _parse_stories(xml.getroot())
     if xml.getroot().tag == 'story':
         return _parse_story(xml.getroot())

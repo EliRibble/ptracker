@@ -25,17 +25,13 @@ def projects(guid):
         print("Project {0}: {1}".format(project.find('name').text, project.find('id').text))
 
 def stories(guid, project_id):
-    url = STORIES_URL.format(project_id)
-    data = requests.get(url, headers={'X-TrackerToken': guid})
-    if not data.status_code == 200:
-        print(data.status_code, data.content)
-        return 1
+    stories = parse(_get_data(guid, STORIES_URL, (project_id,)))
+    logging.info("%s stories", len(stories))
 
-    xml = etree.parse(StringIO.StringIO(data.content))
-    import pdb;pdb.set_trace()
-    print(xml)
+def story(guid, project_id, story_id, activities=False):
+    if not story_id:
+        raise Exception("You must specify a story id")
 
-def story(guid, project_id, story_id):
     story = parse(_get_data(guid, STORY_URL, (project_id, story_id)))
 
     print("{0} {1} - {2}".format(story.story_type, story.id, story.name))
