@@ -24,7 +24,11 @@ class Note(object):
         self.text      = None
         self.author    = None
         self.noted_at  = None
-        
+ 
+class Activity(object):
+    pass
+
+       
 def _parse_note(note):
     n = Note()
     n.id        = note.find('id').text
@@ -57,15 +61,45 @@ def _parse_story(story):
     s.notes         = _parse_notes(story.find('notes'))
     return s
 
-def _parse_stories(stories):
+def _parse_stories(xml):
     stories = []
-    for story in stories:
+    for story in xml:
         stories.append(_parse_story(story))
     return stories
-    
+ 
+def _parse_activity(activity):
+    a = Activity()
+    a.id            = activity.find('id').text
+    a.version       = activity.find('version').text
+    a.event_type    = activity.find('event_type').text
+    a.occurred_at   = activity.find('occurred_at').text
+    a.project_id    = activity.find('project_id').text
+    a.description   = activity.find('description').text
+    a.author        = activity.find('author').text
+    if a.author.strip() == '':
+        a.author = None
+    for subnode in activity:
+        if subnode.text.strip() != '':
+            print("{0}: {1}".format(subnode.tag, subnode.text))
+        else:
+            if subnode.tag == 'stories':
+                for story in subnode:
+                    for subsubnode in story:
+                        print("\t{0}: {1}".format(subsubnode.tag, subsubnode.text))
+    print("-------")
+    return a
+
+def _parse_activities(xml):
+    activities = []
+    for activity in xml:
+        activities.append(_parse_activity(activity))
+    return activities
+
 def parse(xml):
     xml = etree.parse(StringIO.StringIO(xml))
     if xml.getroot().tag == 'stories':
         return _parse_stories(xml.getroot())
-    if xml.getroot().tag == 'story':
+    elif xml.getroot().tag == 'story':
         return _parse_story(xml.getroot())
+    elif xml.getroot().tag == 'activities':
+        return _parse_activities(xml.getroot())

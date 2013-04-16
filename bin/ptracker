@@ -22,6 +22,11 @@ def main():
     story_parser.add_argument('--project-id', help="The project ID to get the story from")
     story_parser.add_argument('--story-id', help="The story ID of the story to get")
 
+    activities_parser = subparsers.add_parser('activities', help="Get information on the activities for a story")
+    activities_parser.set_defaults(command='activities')
+    activities_parser.add_argument('--project-id', help="The project ID to get the story from")
+    activities_parser.add_argument('--story-id', help="The story ID of the story to get")
+
     args = parser.parse_args()
 
     ptracker.configuration.initialize(args)
@@ -44,7 +49,7 @@ def main():
         return ptracker.commands.story(guid, project_id, args.story_id)
 
     elif args.command == 'activities':
-        return ptracker.commands.activities(guid, project_id, args.story_id)
+        return ptracker.commands.activities(guid, args.story_id)
     return 0
 
 if __name__ == '__main__':
