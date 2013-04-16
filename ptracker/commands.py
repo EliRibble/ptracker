@@ -11,7 +11,7 @@ def _get_data(guid, url_pattern, parameters):
     url = url_pattern.format(*parameters)
     data = requests.get(url, headers={'X-TrackerToken': guid})
     if not data.status_code == 200:
-        print(data.status_code, data.content)
+        print(url, data.status_code, data.content)
         raise Exception(data.content)
     return data.content
     
@@ -20,7 +20,6 @@ def projects(guid):
 
     xml = etree.parse(StringIO.StringIO(xml))
     
-    #import pdb;pdb.set_trace()
     for project in xml.findall('project'):
         print("Project {0}: {1}".format(project.find('name').text, project.find('id').text))
 

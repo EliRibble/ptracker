@@ -2,6 +2,7 @@
 import sys
 import argparse
 import ptracker.commands
+import ptracker.configuration
 
 def main():
     parser = argparse.ArgumentParser()
@@ -22,14 +23,21 @@ def main():
 
     args = parser.parse_args()
 
+    ptracker.configuration.initialize(args)
+    if ptracker.configuration.get('guid') is None:
+        print("Please specify a GUID either in ~/.ptracker or via --guid <guid>")
+        return 1
+   
+    guid = ptracker.configuration.get('guid')
+    print("Using GUID {0}".format(guid))
     if args.command == 'projects':
-        return ptracker.commands.projects(args.guid)
+        return ptracker.commands.projects(guid)
 
     elif args.command == 'stories':
-        return ptracker.commands.stories(args.guid, args.project_id)
+        return ptracker.commands.stories(guid, args.project_id)
 
     elif args.command == 'story':
-        return ptracker.commands.story(args.guid, args.project_id, args.story_id)
+        return ptracker.commands.story(guid, args.project_id, args.story_id)
     return 0
 
 if __name__ == '__main__':
