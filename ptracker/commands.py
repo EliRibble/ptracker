@@ -2,6 +2,7 @@ import requests
 from lxml import etree
 import StringIO
 from ptracker.story import parse
+import logging
 
 PROJECTS_URL    = 'https://www.pivotaltracker.com/services/v3/projects'
 STORIES_URL     = 'https://www.pivotaltracker.com/services/v3/projects/{0}/stories'

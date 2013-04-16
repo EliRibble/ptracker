@@ -6,7 +6,8 @@ import logging
 _configuration = {}
 
 OPTIONS = {
-    'guid': None
+    'guid': None,
+    'project_id': None
 }
 
 def initialize(args):

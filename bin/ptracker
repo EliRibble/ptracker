@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 import sys
 import argparse
+import logging
 import ptracker.commands
 import ptracker.configuration
 
@@ -28,16 +29,22 @@ def main():
         print("Please specify a GUID either in ~/.ptracker or via --guid <guid>")
         return 1
    
+    logging.getLogger().setLevel(logging.DEBUG)
+
     guid = ptracker.configuration.get('guid')
-    print("Using GUID {0}".format(guid))
+    project_id = ptracker.configuration.get('project_id')
+    logging.info("Using GUID {0}".format(guid))
     if args.command == 'projects':
         return ptracker.commands.projects(guid)
 
     elif args.command == 'stories':
-        return ptracker.commands.stories(guid, args.project_id)
+        return ptracker.commands.stories(guid, project_id)
 
     elif args.command == 'story':
-        return ptracker.commands.story(guid, args.project_id, args.story_id)
+        return ptracker.commands.story(guid, project_id, args.story_id)
+
+    elif args.command == 'activities':
+        return ptracker.commands.activities(guid, project_id, args.story_id)
     return 0
 
 if __name__ == '__main__':
