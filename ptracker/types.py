@@ -60,6 +60,11 @@ class User(Base):
     name        = Column(String(200))
     email       = Column(String(200))
     initials    = Column(String(3))
+    def __init__(self, id=None, name=None, email=None, initials=None):
+        self.id         = id
+        self.name       = name
+        self.email      = email
+        self.initials   = initials if initials else (''.join([n.upper()[0] for n in name.split()]) if name else None)
 
 class Label(Base):
     __tablename__ = 'labels'
