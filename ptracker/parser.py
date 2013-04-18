@@ -79,26 +79,26 @@ def _parse_member(member):
    
 def _parse_project(project):
     p = Project()
-    p.id                = project.find('id').text
-    p.name              = project.find('name').text
-    p.iteration_length  = project.find('iteration_length').text
-    p.week_start_day    = project.find('week_start_day').text
-    p.point_scale       = project.find('point_scale').text
-    p.account    = project.find('account').text
-    p.first_iteration_start_time    = project.find('first_iteration_start_time').text
-    p.current_iteration_number    = project.find('current_iteration_number').text
-    p.enable_tasks    = project.find('enable_tasks').text
-    p.velocity_scheme       = project.find('velocity_scheme').text
-    p.current_velocity    = project.find('current_velocity').text
-    p.initial_velocity    = project.find('initial_velocity').text
-    p.number_of_done_iterations_to_show    = project.find('number_of_done_iterations_to_show').text
-    p.labels    = project.find('number_of_done_iterations_to_show').text.split(',')
-    p.last_activity_at    = project.find('last_activity_at').text
-    p.allow_attachments    = project.find('allow_attachments').text
-    p.public    = project.find('public').text
-    p.use_https    = project.find('use_https').text
-    p.bugs_and_chores_are_estimatable    = project.find('bugs_and_chores_are_estimatable').text
-    p.commit_mode    = project.find('commit_mode').text
+    p.id                                = project.find('id').text
+    p.name                              = project.find('name').text
+    p.iteration_length                  = project.find('iteration_length').text
+    p.week_start_day                    = project.find('week_start_day').text
+    p.point_scale                       = project.find('point_scale').text
+    p.account                           = project.find('account').text
+    p.first_iteration_start_time        = project.find('first_iteration_start_time').text
+    p.current_iteration_number          = project.find('current_iteration_number').text
+    p.enable_tasks                      = project.find('enable_tasks').text
+    p.velocity_scheme                   = project.find('velocity_scheme').text
+    p.current_velocity                  = project.find('current_velocity').text
+    p.initial_velocity                  = project.find('initial_velocity').text
+    p.number_of_done_iterations_to_show = project.find('number_of_done_iterations_to_show').text
+    p.labels                            = project.find('number_of_done_iterations_to_show').text.split(',')
+    p.last_activity_at                  = project.find('last_activity_at').text
+    p.allow_attachments                 = project.find('allow_attachments').text
+    p.public                            = project.find('public').text
+    p.use_https                         = project.find('use_https').text
+    p.bugs_and_chores_are_estimatable   = project.find('bugs_and_chores_are_estimatable').text
+    p.commit_mode                       = project.find('commit_mode').text
     p.members = []
     for member in project.find('memberships'):
         p.members.append(_parse_member(member))

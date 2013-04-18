@@ -1,5 +1,7 @@
 from sqlalchemy import create_engine, Table, Column, MetaData, ForeignKey, String
+from sqlalchemy.orm import sessionmaker
 
+Session = sessionmaker()
 def setupdb(user, password, name):
     if user is None:
         raise Exception("You must supply a user")
@@ -9,12 +11,7 @@ def setupdb(user, password, name):
         raise Exception("You must supply a DB name")
 
     engine = create_engine('postgres://{0}:{1}@localhost/{2}'.format(user, password, name), echo=True)
+    Session.configure(bind=engine)
     
-    metadata = MetaData()
-    users = Table('users', metadata,
-        Column('name', String(200), primary_key=True)
-    )
-    metadata.create_all(engine)
-    
-
-
+    import ptracker.types
+    ptracker.types.Base.metadata.create_all(engine)
