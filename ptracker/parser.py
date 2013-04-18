@@ -1,6 +1,6 @@
 import StringIO
 from lxml import etree
-from ptracker.types import Story, Note, Activity, Project, User
+from ptracker.types import Story, Note, Activity, Project, User, Label
        
 def _parse_note(note):
     n = Note()
@@ -92,16 +92,15 @@ def _parse_project(project):
     p.current_velocity                  = project.find('current_velocity').text
     p.initial_velocity                  = project.find('initial_velocity').text
     p.number_of_done_iterations_to_show = project.find('number_of_done_iterations_to_show').text
-    p.labels                            = project.find('number_of_done_iterations_to_show').text.split(',')
     p.last_activity_at                  = project.find('last_activity_at').text
     p.allow_attachments                 = project.find('allow_attachments').text
     p.public                            = project.find('public').text
     p.use_https                         = project.find('use_https').text
     p.bugs_and_chores_are_estimatable   = project.find('bugs_and_chores_are_estimatable').text
     p.commit_mode                       = project.find('commit_mode').text
-    p.members = []
-    for member in project.find('memberships'):
-        p.members.append(_parse_member(member))
+    
+    p.members = [_parse_member(m) for m in project.find('memberships')]
+    p.labels  = [Label(l) for l in project.find('labels').text.split(',')]
     return p
     
 def _parse_projects(xml):

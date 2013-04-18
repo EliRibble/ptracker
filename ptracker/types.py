@@ -44,13 +44,13 @@ class User(Base):
     initials    = Column(String(3))
 
 
-class Tag(Base):
-    __tablename__ = 'tags'
+class Label(Base):
+    __tablename__ = 'labels'
     name    = Column(String(200), primary_key=True)
 
-project_tags = Table('project_tags', Base.metadata,
+project_labels = Table('project_labels', Base.metadata,
     Column('project_id', String(20), ForeignKey('projects.id')),
-    Column('tag', String(20), ForeignKey('tags.name')))
+    Column('tag', String(20), ForeignKey('labels.name')))
 
 project_members = Table('project_members', Base.metadata,
     Column('project_id', String(20), ForeignKey('projects.id')),
@@ -77,6 +77,6 @@ class Project(Base):
     use_https                           = Column(Boolean())
     bugs_and_chores_are_estimatable     = Column(Boolean())
     commit_mode                         = Column(Boolean())
-    tags                                = relationship("Tag", secondary=project_tags, backref='projects')
+    labels                              = relationship("Label", secondary=project_labels, backref='projects')
     members                             = relationship("User", secondary=project_members, backref='projects')
 
