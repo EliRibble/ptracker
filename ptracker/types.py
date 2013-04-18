@@ -1,34 +1,52 @@
 import StringIO
 from lxml import etree
-from sqlalchemy import Integer, String, DateTime, Boolean, Column, Table, ForeignKey
+from sqlalchemy import Integer, String, DateTime, Boolean, Column, Table, ForeignKey, Text
 from sqlalchemy.orm import relationship, backref
 from sqlalchemy.ext.declarative import declarative_base
 
 Base = declarative_base()
 
-class Story(object):
-    def __init__(self):
-        self.id            = None
-        self.project_id    = None
-        self.story_type    = None
-        self.url           = None
-        self.current_state = None
-        self.description   = None
-        self.name          = None
-        self.requested_by  = None
-        self.owned_by      = None
-        self.created_at    = None
-        self.updated_at    = None
-        self.accepted_at   = None
-        self.labels        = None
-        self.notes         = []
+project_labels = Table('project_labels', Base.metadata,
+    Column('project_id', String(20), ForeignKey('projects.id')),
+    Column('label', String(200), ForeignKey('labels.name')))
+
+story_labels = Table('story_labels', Base.metadata,
+    Column('story_id', String(20), ForeignKey('stories.id')),
+    Column('label', String(200), ForeignKey('labels.name')))
+
+project_members = Table('project_members', Base.metadata,
+    Column('project_id', String(20), ForeignKey('projects.id')),
+    Column('user_id', String(20), ForeignKey('users.id')))
+
+class Story(Base):
+    __tablename__ = 'stories'
+    id              = Column(String(20), primary_key=True)
+    project_id      = Column(String(20))
+    story_type      = Column(String(20))
+    url             = Column(String(512))
+    current_state   = Column(String(20))
+    description     = Column(Text())
+    name            = Column(Text())
+    requested_by_id = Column(String(20), ForeignKey('users.id'))
+    owned_by_id     = Column(String(20), ForeignKey('users.id'))
+
+    requested_by    = relationship("User", backref='requested_stories', foreign_keys=[requested_by_id])
+    owned_by        = relationship("User", backref='owned_stories', foreign_keys=[owned_by_id])
     
-class Note(object):
-    def __init__(self):
-        self.id        = None
-        self.text      = None
-        self.author    = None
-        self.noted_at  = None
+    created_at      = Column(DateTime())
+    updated_at      = Column(DateTime())
+    accepted_at     = Column(DateTime())
+    labels          = relationship("Label", secondary=story_labels, backref='stories')
+    
+class Note(Base):
+    __tablename__ = 'notes'
+    id          = Column(String(20), primary_key=True)
+    text        = Column(Text())
+    noted_at    = Column(DateTime())
+    author_id   = Column(String(20), ForeignKey('users.id'))
+    story_id    = Column(String(20), ForeignKey('stories.id'))
+    author      = relationship("User", backref='notes')
+    story       = relationship("Story", backref='notes')
  
 class Activity(object):
     pass
@@ -43,22 +61,11 @@ class User(Base):
     email       = Column(String(200))
     initials    = Column(String(3))
 
-
 class Label(Base):
     __tablename__ = 'labels'
     name    = Column(String(200), primary_key=True)
-    def __init__(self, name):
-        self.name = name
     def __repr__(self):
         return u"Label '{0}'".format(self.name)
-
-project_labels = Table('project_labels', Base.metadata,
-    Column('project_id', String(20), ForeignKey('projects.id')),
-    Column('label', String(200), ForeignKey('labels.name')))
-
-project_members = Table('project_members', Base.metadata,
-    Column('project_id', String(20), ForeignKey('projects.id')),
-    Column('user_id', String(20), ForeignKey('users.id')))
 
 class Project(Base):
     __tablename__ = 'projects'
