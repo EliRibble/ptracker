@@ -18,9 +18,17 @@ def _get_data(guid, url_pattern, parameters):
         raise Exception(data.content)
     return data.content
     
+def setupdb(db_user, db_password, db_name):
+    try:
+        db.setupdb(db_user, db_password, db_name)
+        return 0
+    except Exception, e:
+        print(e)
+        return 1
+    
 def projects(guid):
     xml = _get_data(guid, PROJECTS_URL, ())
-
+    
     xml = etree.parse(StringIO.StringIO(xml))
     
     for project in xml.findall('project'):

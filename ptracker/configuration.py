@@ -6,8 +6,11 @@ import logging
 _configuration = {}
 
 OPTIONS = {
-    'guid': None,
-    'project_id': None
+    'guid'          : None,
+    'project_id'    : None,
+    'db_user'       : None,
+    'db_password'   : None,
+    'db_name'       : None
 }
 
 def initialize(args):
