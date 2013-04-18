@@ -28,3 +28,8 @@ class Note(object):
 class Activity(object):
     pass
 
+class Project(object):
+    pass
+
+class User(object):
+    pass

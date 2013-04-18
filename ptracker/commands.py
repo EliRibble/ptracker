@@ -29,11 +29,10 @@ def setupdb(db_user, db_password, db_name):
     
 def projects(guid):
     xml = _get_data(guid, PROJECTS_URL, ())
+    projects = parse(xml)
     
-    xml = etree.parse(StringIO.StringIO(xml))
-    
-    for project in xml.findall('project'):
-        print("Project {0}: {1}".format(project.find('name').text, project.find('id').text))
+    for project in projects:
+        print("Project {0}: {1}".format(project.name, project.id))
 
 def stories(guid, project_id):
     stories = parse(_get_data(guid, STORIES_URL, (project_id,)))
