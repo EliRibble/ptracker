@@ -25,15 +25,19 @@ def _parse_story(story):
     s.story_type    = story.find('story_type').text
     s.url           = story.find('url').text
     s.current_state = story.find('current_state').text
-    s.description   = story.find('description').text
+    description     = story.find('description')
+    s.description   = description.text if description is not None else None
     s.name          = story.find('name').text
     s.requested_by  = story.find('requested_by').text
-    s.owned_by      = story.find('owned_by').text
     s.created_at    = story.find('created_at').text
-    s.updated_at    = story.find('updated_at').text
-    s.accepted_at   = story.find('accepted_at').text
-    s.labels        = story.find('labels').text
-    s.notes         = _parse_notes(story.find('notes'))
+    owned_by        = story.find('owned_by')
+    s.owned_by      = owned_by.text if owned_by is not None else None
+    accepted_at     = story.find('accepted_at')
+    s.accepted_at   = accepted_at.text if accepted_at is not None else None
+    notes           = story.find('notes')
+    s.notes         = _parse_notes(notes) if notes is not None else []
+    labels          = story.find('labels')
+    s.labels        = labels.text.split(',') if labels is not None else []
     return s
 
 def _parse_stories(xml):
