@@ -1,6 +1,6 @@
 import StringIO
 from ptracker import remote
-from ptracker import db, types
+from ptracker import db, types, synchronizer
 import logging
 
 def setupdb(db_user, db_password, db_name):
@@ -13,21 +13,9 @@ def setupdb(db_user, db_password, db_name):
         return 1
     
 def sync(guid, db_user, db_password, db_name):
-    projects = remote.get_projects(guid)
     db.init(db_user, db_password, db_name)
-    session = db.Session()
-    labels = set()
-    existing_labels = {}
-    for project in projects:
-        for label in project.labels:
-            labels.add(label.name)
-    for label in labels:
-        existing_labels[label] = session.merge(types.Label(label))
-    session.commit()
-    for project in projects:
-        project.labels = [existing_labels[label.name] for label in project.labels]
-        session.add(project)
-    session.commit()
+    synchronizer.sync_all(guid, db_user, db_password, db_name)
+    return 0
 
 def projects(guid):
     projects = remote.get_projects(guid)

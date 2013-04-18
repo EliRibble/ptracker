@@ -1,9 +1,11 @@
 import StringIO
 from lxml import etree
-from ptracker.types import Story, Note, Activity, Project, User, Label
        
+class ParsedThing(object):
+    pass
+
 def _parse_note(note):
-    n = Note()
+    n = ParsedThing()
     n.id        = note.find('id').text
     n.text      = note.find('text').text
     n.author    = note.find('author').text
@@ -17,7 +19,7 @@ def _parse_notes(notes):
     return note_objs
 
 def _parse_story(story):
-    s = Story()
+    s = ParsedThing()
     s.id            = story.find('id').text
     s.project_id    = story.find('project_id').text
     s.story_type    = story.find('story_type').text
@@ -41,7 +43,7 @@ def _parse_stories(xml):
     return stories
  
 def _parse_activity(activity):
-    a = Activity()
+    a = ParsedThing()
     a.id            = activity.find('id').text
     a.version       = activity.find('version').text
     a.event_type    = activity.find('event_type').text
@@ -69,7 +71,7 @@ def _parse_activities(xml):
     return activities
 
 def _parse_member(member):
-    m = User()
+    m = ParsedThing()
     m.id = member.find('id').text
     person = member.find('person')
     m.email = person.find('email').text
@@ -78,7 +80,7 @@ def _parse_member(member):
     return m
    
 def _parse_project(project):
-    p = Project()
+    p = ParsedThing()
     p.id                                = project.find('id').text
     p.name                              = project.find('name').text
     p.iteration_length                  = project.find('iteration_length').text
@@ -103,7 +105,9 @@ def _parse_project(project):
 
     labels = project.find('labels').text
     if labels:
-        p.labels  = [Label(l) for l in labels.split(',')]
+        p.labels  = labels.split(',')
+    else:
+        p.labels = []
     return p
     
 def _parse_projects(xml):
