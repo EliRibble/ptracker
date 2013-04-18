@@ -47,10 +47,14 @@ class User(Base):
 class Label(Base):
     __tablename__ = 'labels'
     name    = Column(String(200), primary_key=True)
+    def __init__(self, name):
+        self.name = name
+    def __repr__(self):
+        return u"Label '{0}'".format(self.name)
 
 project_labels = Table('project_labels', Base.metadata,
     Column('project_id', String(20), ForeignKey('projects.id')),
-    Column('tag', String(20), ForeignKey('labels.name')))
+    Column('label', String(200), ForeignKey('labels.name')))
 
 project_members = Table('project_members', Base.metadata,
     Column('project_id', String(20), ForeignKey('projects.id')),
