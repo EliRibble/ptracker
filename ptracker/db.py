@@ -2,7 +2,7 @@ from sqlalchemy import create_engine, Table, Column, MetaData, ForeignKey, Strin
 from sqlalchemy.orm import sessionmaker
 
 Session = sessionmaker()
-def setupdb(user, password, name):
+def init(user, password, name):
     if user is None:
         raise Exception("You must supply a user")
     if password is None:
@@ -10,8 +10,10 @@ def setupdb(user, password, name):
     if name is None:
         raise Exception("You must supply a DB name")
 
-    engine = create_engine('postgres://{0}:{1}@localhost/{2}'.format(user, password, name), echo=True)
-    Session.configure(bind=engine)
+    init.engine = create_engine('postgres://{0}:{1}@localhost/{2}'.format(user, password, name), echo=True)
+    Session.configure(bind=init.engine)
     
+
+def setupdb():
     import ptracker.types
-    ptracker.types.Base.metadata.create_all(engine)
+    ptracker.types.Base.metadata.create_all(init.engine)

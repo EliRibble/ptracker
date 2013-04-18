@@ -16,6 +16,9 @@ def main():
     setupdb_parser = subparsers.add_parser('setupdb', help="Set up the database schema. THIS WILL ERASE ALL OF YOUR DATA")
     setupdb_parser.set_defaults(command='setupdb')
 
+    sync_parser = subparsers.add_parser('sync', help="Synchronize what is on the Pivotal server with our local server")
+    sync_parser.set_defaults(command='sync')
+
     stories_parser = subparsers.add_parser('stories', help="Get information about the stories")
     stories_parser.set_defaults(command='stories')
     stories_parser.add_argument('--project-id', help="The project ID to get the stories from")
@@ -48,6 +51,9 @@ def main():
     logging.info("Using GUID {0}".format(guid))
     if args.command == 'setupdb':
         return ptracker.commands.setupdb(db_user, db_password, db_name)
+
+    if args.command == 'sync':
+        return ptracker.commands.sync(guid, db_user, db_password, db_name)
 
     if args.command == 'projects':
         return ptracker.commands.projects(guid)

@@ -100,7 +100,10 @@ def _parse_project(project):
     p.commit_mode                       = project.find('commit_mode').text
     
     p.members = [_parse_member(m) for m in project.find('memberships')]
-    p.labels  = [Label(l) for l in project.find('labels').text.split(',')]
+
+    labels = project.find('labels').text
+    if labels:
+        p.labels  = [Label(l) for l in labels.split(',')]
     return p
     
 def _parse_projects(xml):
