@@ -17,6 +17,14 @@ def initialize(args):
     global _configuration
     _configuration = copy.copy(OPTIONS)
 
+    ptracker_home = os.path.abspath(os.path.join(os.environ['HOME'], '.ptracker'))
+    if not os.path.exists(ptracker_home):
+        try:
+            os.mkdir(ptracker_home)
+        except IOError, ex:
+            logging.error("Unable to create ptracker home at %s", ptracker_home)
+            return
+
     config_file = os.path.abspath(os.path.join(os.environ['HOME'], '.ptracker', 'config'))
     try:
         config = ConfigParser.SafeConfigParser()
