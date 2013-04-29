@@ -15,5 +15,5 @@ def init(user, password, name):
     
 
 def setupdb():
-    import ptracker.types
-    ptracker.types.Base.metadata.create_all(init.engine)
+    Base.metadata.drop_all(init.engine)
+    Base.metadata.create_all(init.engine)
