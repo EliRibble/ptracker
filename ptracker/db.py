@@ -10,7 +10,7 @@ def init(user, password, name):
     if name is None:
         raise Exception("You must supply a DB name")
 
-    init.engine = create_engine('postgres://{0}:{1}@localhost/{2}'.format(user, password, name), echo=True)
+    init.engine = create_engine('postgres://{0}:{1}@localhost/{2}'.format(user, password, name))
     Session.configure(bind=init.engine)
     
 
