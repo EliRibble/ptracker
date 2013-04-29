@@ -17,7 +17,7 @@ def initialize(args):
     global _configuration
     _configuration = copy.copy(OPTIONS)
 
-    config_file = os.path.abspath(os.path.join(os.environ['HOME'], '.ptracker'))
+    config_file = os.path.abspath(os.path.join(os.environ['HOME'], '.ptracker', 'config'))
     try:
         config = ConfigParser.SafeConfigParser()
         config.read(config_file)
