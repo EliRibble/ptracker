@@ -2,10 +2,14 @@ import StringIO
 from lxml import etree
        
 class ParsedThing(object):
-    pass
+    def __init__(self, t):
+        self.type = t
+
+    def __repr__(self):
+        return u'Parsed {0}'.format(self.type)
 
 def _parse_note(note):
-    n = ParsedThing()
+    n = ParsedThing('note')
     n.id        = note.find('id').text
     n.text      = note.find('text').text
     n.author    = note.find('author').text
@@ -19,7 +23,7 @@ def _parse_notes(notes):
     return note_objs
 
 def _parse_story(story):
-    s = ParsedThing()
+    s = ParsedThing('story')
     s.id            = story.find('id').text
     s.project_id    = story.find('project_id').text
     s.story_type    = story.find('story_type').text
@@ -47,7 +51,7 @@ def _parse_stories(xml):
     return stories
  
 def _parse_activity(activity):
-    a = ParsedThing()
+    a = ParsedThing('activity')
     a.id            = activity.find('id').text
     a.version       = activity.find('version').text
     a.event_type    = activity.find('event_type').text
@@ -75,7 +79,7 @@ def _parse_activities(xml):
     return activities
 
 def _parse_member(member):
-    m = ParsedThing()
+    m = ParsedThing('member')
     m.id = member.find('id').text
     person = member.find('person')
     m.email = person.find('email').text
@@ -84,7 +88,7 @@ def _parse_member(member):
     return m
    
 def _parse_project(project):
-    p = ParsedThing()
+    p = ParsedThing('project')
     p.id                                = project.find('id').text
     p.name                              = project.find('name').text
     p.iteration_length                  = project.find('iteration_length').text
