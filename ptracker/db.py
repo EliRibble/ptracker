@@ -1,5 +1,6 @@
 from sqlalchemy import create_engine, Table, Column, MetaData, ForeignKey, String
 from sqlalchemy.orm import sessionmaker
+from ptracker.types import Base
 
 Session = sessionmaker()
 def init(user, password, name):
