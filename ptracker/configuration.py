@@ -13,14 +13,14 @@ OPTIONS = {
     'db_name'       : None
 }
 
+PTRACKER_HOME = os.path.abspath(os.path.join(os.environ['HOME'], '.ptracker'))
 def initialize(args):
     global _configuration
     _configuration = copy.copy(OPTIONS)
 
-    ptracker_home = os.path.abspath(os.path.join(os.environ['HOME'], '.ptracker'))
-    if not os.path.exists(ptracker_home):
+    if not os.path.exists(PTRACKER_HOME):
         try:
-            os.mkdir(ptracker_home)
+            os.mkdir(PTRACKER_HOME)
         except IOError, ex:
             logging.error("Unable to create ptracker home at %s", ptracker_home)
             return
