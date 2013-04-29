@@ -134,3 +134,10 @@ def parse(xml):
         return _parse_story(xml.getroot())
     elif xml.getroot().tag == 'activities':
         return _parse_activities(xml.getroot())
+
+def has_story_creation(xml):
+    root = etree.parse(StringIO.StringIO(xml)).getroot()
+    for activity in root:
+        if activity.find('event_type').text == 'story_create':
+            return True
+    return False

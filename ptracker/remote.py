@@ -33,5 +33,11 @@ def get_activities(guid, story_id):
     if not story_id:
         raise Exception("You must specify a story id")
 
-    data = _get_data(guid, ACTIVITIES_URL, (story_id,))
+    page = 0
+    while True:
+        data = _get_data(guid, ACTIVITIES_URL, (story_id, page), 'stories/{0}/activities_{1}.xml')
+        page += 1
+        if has_story_creation(data):
+            break
+            
     return parse(data)
