@@ -10,7 +10,7 @@ class ParsedThing(object):
 
 def _parse_note(note):
     n = ParsedThing('note')
-    n.id        = note.find('id').text
+    n.id        = int(note.find('id').text)
     n.text      = note.find('text').text
     n.author    = note.find('author').text
     n.noted_at  = note.find('noted_at').text
@@ -24,7 +24,7 @@ def _parse_notes(notes):
 
 def _parse_story(story):
     s = ParsedThing('story')
-    s.id            = story.find('id').text
+    s.id            = int(story.find('id').text)
     s.project_id    = story.find('project_id').text
     s.story_type    = story.find('story_type').text
     s.url           = story.find('url').text
@@ -52,7 +52,7 @@ def _parse_stories(xml):
  
 def _parse_activity(activity):
     a = ParsedThing('activity')
-    a.id            = activity.find('id').text
+    a.id            = int(activity.find('id').text)
     a.version       = activity.find('version').text
     a.event_type    = activity.find('event_type').text
     a.occurred_at   = activity.find('occurred_at').text
@@ -61,15 +61,6 @@ def _parse_activity(activity):
     a.author        = activity.find('author').text
     if a.author.strip() == '':
         a.author = None
-    for subnode in activity:
-        if subnode.text.strip() != '':
-            print("{0}: {1}".format(subnode.tag, subnode.text))
-        else:
-            if subnode.tag == 'stories':
-                for story in subnode:
-                    for subsubnode in story:
-                        print("\t{0}: {1}".format(subsubnode.tag, subsubnode.text))
-    print("-------")
     return a
 
 def _parse_activities(xml):
@@ -80,7 +71,7 @@ def _parse_activities(xml):
 
 def _parse_member(member):
     m = ParsedThing('member')
-    m.id = member.find('id').text
+    m.id = int(member.find('id').text)
     person = member.find('person')
     m.email = person.find('email').text
     m.name = person.find('name').text
@@ -89,7 +80,7 @@ def _parse_member(member):
    
 def _parse_project(project):
     p = ParsedThing('project')
-    p.id                                = project.find('id').text
+    p.id                                = int(project.find('id').text)
     p.name                              = project.find('name').text
     p.iteration_length                  = project.find('iteration_length').text
     p.week_start_day                    = project.find('week_start_day').text
@@ -134,6 +125,10 @@ def parse(xml):
         return _parse_story(xml.getroot())
     elif xml.getroot().tag == 'activities':
         return _parse_activities(xml.getroot())
+
+def num_subitems(xml):
+    root = etree.parse(StringIO.StringIO(xml)).getroot()
+    return len(root)
 
 def has_story_creation(xml):
     root = etree.parse(StringIO.StringIO(xml)).getroot()

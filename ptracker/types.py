@@ -59,8 +59,12 @@ class Activity(Base):
     version     = Column(Integer())
     event_type  = Column(String(100))
     ocurred_at  = Column(DateTime())
-    author      = Column(BigInteger(), ForeignKey('user.id'))
-    project     = Column(BigInteger(), ForeignKey('project.id'))
+    author_id   = Column(BigInteger(), ForeignKey('user.id'))
+    project_id  = Column(BigInteger(), ForeignKey('project.id'))
+
+    author      = relationship("User", backref='activities_authored', foreign_keys=[author_id])
+    project     = relationship("Project", backref='activities', foreign_keys=[project_id])
+
     description = Column(Text())
 
 class User(Base):
